@@ -54,7 +54,7 @@ p <- ggplot(data = nsteps.per.day) +
 print(p)
 ```
 
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
+![plot of chunk Histogram](figure/Histogram.png) 
 
 #### Mean and median total number of steps taken per day
 

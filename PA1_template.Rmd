@@ -4,7 +4,7 @@
 ## Loading and preprocessing the data
 
 Unzip and load the data
-```{r echo=TRUE}
+```{r Processing, echo=TRUE}
 unzip("activity.zip")
 data <- read.csv(file = "activity.csv",
                  na.strings = "NA",
@@ -14,7 +14,7 @@ head(data)
 
 
 ## What is mean total number of steps taken per day?
-```{r echo=TRUE}
+```{r Histogram, echo=TRUE}
 library(ggplot2)
 library(plyr)
 
@@ -32,7 +32,7 @@ print(p)
 
 #### Mean and median total number of steps taken per day
 
-```{r echo=TRUE}
+```{r MeanAndMedian, echo=TRUE}
 mean.steps.per.day <- mean(nsteps.per.day$total.steps)
 print(mean.steps.per.day)
 
