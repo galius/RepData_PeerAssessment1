@@ -4,42 +4,35 @@
 ## Loading and preprocessing the data
 
 Unzip and load the data
-```{r echo=TRUE, tidy=TRUE }
+```{r echo=TRUE}
 unzip("activity.zip")
-data <- read.csv(file="activity.csv",
-                 na.strings="NA",
-                 colClasses=c("numeric","Date","numeric"))
+data <- read.csv(file = "activity.csv",
+                 na.strings = "NA",
+                 colClasses = c("numeric", "Date", "numeric"))
 head(data)
 ```
 
 
 ## What is mean total number of steps taken per day?
-```{r echo=TRUE, tidy=TRUE}
+```{r echo=TRUE}
 library(ggplot2)
 library(plyr)
 
 nsteps.per.day <- ddply(data, "date", summarise, 
-                        total.steps = sum(steps, na.rm=TRUE))
+                        total.steps = sum(steps, na.rm = TRUE))
 head(nsteps.per.day)
 
-p <- ggplot(data=nsteps.per.day) +
-        geom_histogram(aes(x=total.steps),binwidth=2000) +
-        geom_vline(aes(xintercept=mean(total.steps)), color=I("red"), size=1) + 
-        geom_vline(aes(xintercept=median(total.steps)), color=I("red"), size=1,
-                   linetype="dashed") +
-        labs(x="Total number of steps taken each day",
-             y="Count",
-             title="Histogram of the Total Number of Steps Taken Each Day") +
-        annotate("text", 
-                 label="- mean\n -- median",
-                 x=20000, y=15, 
-                 fontface=3, color="red")     
+p <- ggplot(data = nsteps.per.day) +
+        geom_histogram(aes(x = total.steps), binwidth = 2000) +
+        labs(x = "Total number of steps taken each day",
+             y = "Count",
+             title = "Histogram of the Total Number of Steps Taken Each Day")   
 print(p)
 ```
 
 #### Mean and median total number of steps taken per day
 
-```{r echo=TRUE, tidy=TRUE}
+```{r echo=TRUE}
 mean.steps.per.day <- mean(nsteps.per.day$total.steps)
 print(mean.steps.per.day)
 
