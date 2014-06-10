@@ -77,11 +77,50 @@ print(median.steps.per.day)
 ## [1] 10395
 ```
 
-
-
-
 ## What is the average daily activity pattern?
 
+
+```r
+ndays <- nrow(nsteps.per.day) # Total number of days
+
+avg.nsteps.per.interval <- ddply(data, "interval", summarise, 
+                                average.nsteps = sum(steps, na.rm = TRUE)/ndays)
+
+head(avg.nsteps.per.interval)
+```
+
+```
+##   interval average.nsteps
+## 1        0        1.49180
+## 2        5        0.29508
+## 3       10        0.11475
+## 4       15        0.13115
+## 5       20        0.06557
+## 6       25        1.81967
+```
+
+```r
+p <- ggplot(avg.nsteps.per.interval, aes(x = interval, y = average.nsteps)) +
+        geom_line() +
+        labs(x = "5-minute interval",
+             y = "Daily average number of steps",
+             title = "Average Daily Activity Pattern")
+
+print(p)
+```
+
+![plot of chunk TimeSeries](figure/TimeSeries.png) 
+#### 5-minute interval with the maximum number of steps on daily average:
+
+
+```r
+avg.max.nsteps <- max(avg.nsteps.per.interval$average.nsteps)
+print(avg.max.nsteps)
+```
+
+```
+## [1] 179.1
+```
 
 
 ## Imputing missing values

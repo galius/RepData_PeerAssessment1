@@ -40,11 +40,30 @@ median.steps.per.day <- median(nsteps.per.day$total.steps)
 print(median.steps.per.day)
 ```
 
-
-
-
 ## What is the average daily activity pattern?
 
+```{r TimeSeries, echo=TRUE}
+ndays <- nrow(nsteps.per.day) # Total number of days
+
+avg.nsteps.per.interval <- ddply(data, "interval", summarise, 
+                                average.nsteps = sum(steps, na.rm = TRUE)/ndays)
+
+head(avg.nsteps.per.interval)
+
+p <- ggplot(avg.nsteps.per.interval, aes(x = interval, y = average.nsteps)) +
+        geom_line() +
+        labs(x = "5-minute interval",
+             y = "Daily average number of steps",
+             title = "Average Daily Activity Pattern")
+
+print(p)
+```
+#### 5-minute interval with the maximum number of steps on daily average:
+
+```{r MaxDAvgSteps, echo=TRUE}
+avg.max.nsteps <- max(avg.nsteps.per.interval$average.nsteps)
+print(avg.max.nsteps)
+```
 
 
 ## Imputing missing values
