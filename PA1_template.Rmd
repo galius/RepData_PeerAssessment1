@@ -9,7 +9,6 @@ unzip("activity.zip")
 data <- read.csv(file = "activity.csv",
                  na.strings = "NA",
                  colClasses = c("numeric", "Date", "numeric"))
-head(data)
 ```
 
 
@@ -28,16 +27,12 @@ p <- ggplot(data = nsteps.per.day) +
              y = "Count",
              title = "Histogram of the Total Number of Steps Taken Each Day")   
 print(p)
-```
 
-#### Mean and median total number of steps taken per day
+# Mean of the total number of steps.
+mean(nsteps.per.day$total.steps)
 
-```{r MeanAndMedian, echo=TRUE}
-mean.steps.per.day <- mean(nsteps.per.day$total.steps)
-print(mean.steps.per.day)
-
-median.steps.per.day <- median(nsteps.per.day$total.steps)
-print(median.steps.per.day)
+# Median of the total number of steps.
+median(nsteps.per.day$total.steps)
 ```
 
 ## What is the average daily activity pattern?
@@ -57,17 +52,71 @@ p <- ggplot(avg.nsteps.per.interval, aes(x = interval, y = average.nsteps)) +
              title = "Average Daily Activity Pattern")
 
 print(p)
-```
-#### 5-minute interval with the maximum number of steps on daily average:
 
-```{r MaxDAvgSteps, echo=TRUE}
-avg.max.nsteps <- max(avg.nsteps.per.interval$average.nsteps)
-print(avg.max.nsteps)
+## 5-minute interval with the maximum number of steps on daily average
+max(avg.nsteps.per.interval$average.nsteps)
 ```
 
 
 ## Imputing missing values
 
+#### Total number of missing values
+```{r NumberOfMV, echo=TRUE}
+summary(data)
+mv <- sum(is.na(data))
+
+# Missing Values
+print(mv)
+```
+
+#### Imputing missing values using the mean for the 5-minute interval
+
+```{r MissingValuesImputation, echo=TRUE}
+## Missing values were imputed using the average number of steps taken,
+## averaged across all days. This data is contained in the avg.nsteps.per.interval
+## dataframe reported above.
+
+## The function get.avg.step returns the average number of steps taken, 
+## rounded to the nearest integer, for a particular interval n.
+get.avg.step <- function(n){
+        round(
+        avg.nsteps.per.interval$average.nsteps[avg.nsteps.per.interval$interval == n])  
+}
+
+## data.mi is a new dataset that is equal to the original dataset 
+## but with the missing data filled in.
+
+data.mi <- data
+data.mi[which(is.na(data.mi)),]$steps <- sapply(
+        data.mi[which(is.na(data.mi)),]$interval, get.avg.step)
+
+summary(data.mi)
+head(data.mi)
+```
+
+#### Histogram of the total number of steps taken each day after missing value imputation
+
+```{r HistogramAfterImputation, echo=TRUE}
+tsteps.df <- ddply(data.mi, "date", summarise, total.steps=sum(steps))
+
+p <- ggplot(data = tsteps.df) +
+        geom_histogram(aes(x = total.steps), binwidth = 2000) +
+        labs(x = "Total number of steps taken each day",
+             y = "Count",
+             title = "Histogram of the Total Number of Steps Taken Each Day\nAfter Missing Data Imputation")   
+print(p)
+
+# Mean of the total number of steps after m.d. imputation
+mean(tsteps.df$total.steps)
+
+# Median of the total number of steps after m.d. imputation
+median(tsteps.df$total.steps)
+```
+
+The mean of the total number of steps is
+`r  round((mean(tsteps.df$total.steps)/mean(nsteps.per.day$total.steps)-1)*100,2)`
+% greater after missing data imputation 
+but the median has the same value. 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
