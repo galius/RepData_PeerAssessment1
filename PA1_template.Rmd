@@ -4,7 +4,7 @@
 ## Loading and preprocessing the data
 
 Unzip and load the data
-```{r Processing, echo=TRUE}
+```{r Processing, echo=TRUE, tidy=TRUE}
 unzip("activity.zip")
 data <- read.csv(file = "activity.csv",
                  na.strings = "NA",
@@ -14,7 +14,7 @@ data <- read.csv(file = "activity.csv",
 
 
 ## What is the mean total number of steps taken per day?
-```{r Histogram, echo=TRUE}
+```{r Histogram, echo=TRUE, tidy=TRUE}
 library(ggplot2)
 library(plyr)
 
@@ -39,7 +39,7 @@ median(nsteps.per.day$total.steps)
 
 ## What is the average daily activity pattern?
 
-```{r TimeSeries, echo=TRUE}
+```{r TimeSeries, echo=TRUE, tidy=TRUE}
 
 avg.nsteps.per.interval <- ddply(complete.data, .(interval), summarise, 
                                 average.nsteps = mean(steps))
@@ -66,7 +66,7 @@ avg.nsteps.per.interval$interval[avg.nsteps.per.interval$average.nsteps == max.s
 There are a total of **`r sum(is.na(data))`** missing values (NA), all in the
 _steps_ variable as shown in the summary bellow:
 
-```{r NumberOfMV, echo=TRUE}
+```{r NumberOfMV, echo=TRUE, tidy=TRUE}
 summary(data)
 ```
 
@@ -76,7 +76,7 @@ Missing values were imputed using the average number of steps taken for that
 5-minute interval. This data is contained in the _**avg.nsteps.per.interval**_ 
 dataframe reported above.
 
-```{r MissingValuesImputation, echo=TRUE}
+```{r MissingValuesImputation, echo=TRUE, tidy=TRUE}
 
 ## The function get.avg.step returns the average number of steps taken
 ## for a particular interval n.
@@ -97,7 +97,7 @@ data.mi[mi.indices,]$steps <- sapply(
 
 ### Histogram of the total number of steps taken each day after missing value imputation
 
-```{r HistogramAfterImputation, echo=TRUE}
+```{r HistogramAfterImputation, echo=TRUE, tidy=TRUE}
 tsteps.df <- ddply(data.mi, .(date), summarise, total.steps=sum(steps))
 
 ggplot(data = tsteps.df) +
@@ -119,7 +119,7 @@ not fundamentally change neither the mean nor the median values.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r addWeekdaysWeekends, echo=TRUE}
+```{r addWeekdaysWeekends, echo=TRUE, tidy=TRUE}
 data.mi$tday <- weekdays(data.mi$date)
 
 ## dat.type function returns "weekend" or "weekday" depending on the day of the
@@ -132,7 +132,7 @@ data.mi$tday <- as.factor(sapply(data.mi$tday, day.type))
 
 ```
 
-```{r panelTimeSeries, echo=TRUE}
+```{r panelTimeSeries, echo=TRUE, tidy=TRUE}
 library(lattice)
 
 avg.nsteps.by.tday <- ddply(data.mi, .(interval, tday), summarise, 
