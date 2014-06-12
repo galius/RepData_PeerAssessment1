@@ -73,7 +73,7 @@ summary(data)
 ### Imputing missing values using the mean for the 5-minute interval
 
 Missing values were imputed using the average number of steps taken for that
-5-minute interval. This data is contained in the **avg.nsteps.per.interval** 
+5-minute interval. This data is contained in the _**avg.nsteps.per.interval**_ 
 dataframe reported above.
 
 ```{r MissingValuesImputation, echo=TRUE}
