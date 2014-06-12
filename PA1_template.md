@@ -197,7 +197,8 @@ avg.nsteps.by.tday <- ddply(data.mi, .(interval, tday), summarise,
 xyplot(average.nsteps ~ interval | tday, data = avg.nsteps.by.tday,
        type="l",
        xlab="Interval",
-       ylab="Number of steps")
+       ylab="Number of steps",
+       layout=c(1,2))
 ```
 
 ![plot of chunk panelTimeSeries](figure/panelTimeSeries.png) 
