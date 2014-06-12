@@ -13,7 +13,7 @@ data <- read.csv(file = "activity.csv",
 ```
 
 
-## What is mean total number of steps taken per day?
+## What is the mean total number of steps taken per day?
 
 ```r
 library(ggplot2)
@@ -113,12 +113,12 @@ summary(data)
 
 ### Imputing missing values using the mean for the 5-minute interval
 
+Missing values were imputed using the average number of steps taken for that
+5-minute interval. This data is contained in the **avg.nsteps.per.interval** 
+dataframe reported above.
+
 
 ```r
-## Missing values were imputed using the average number of steps taken for that
-## 5-minute interval. This data is contained in the avg.nsteps.per.interval 
-## dataframe reported above.
-
 ## The function get.avg.step returns the average number of steps taken
 ## for a particular interval n.
 get.avg.step <- function(n){

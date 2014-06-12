@@ -191,7 +191,7 @@ data &lt;- read.csv(file = &quot;activity.csv&quot;,
                  colClasses = c(&quot;numeric&quot;, &quot;Date&quot;, &quot;numeric&quot;))
 </code></pre>
 
-<h2>What is mean total number of steps taken per day?</h2>
+<h2>What is the mean total number of steps taken per day?</h2>
 
 <pre><code class="r">library(ggplot2)
 library(plyr)
@@ -276,11 +276,11 @@ avg.nsteps.per.interval$interval[avg.nsteps.per.interval$average.nsteps == max.s
 
 <h3>Imputing missing values using the mean for the 5-minute interval</h3>
 
-<pre><code class="r">## Missing values were imputed using the average number of steps taken for that
-## 5-minute interval. This data is contained in the avg.nsteps.per.interval 
-## dataframe reported above.
+<p>Missing values were imputed using the average number of steps taken for that
+5-minute interval. This data is contained in the <strong>avg.nsteps.per.interval</strong> 
+dataframe reported above.</p>
 
-## The function get.avg.step returns the average number of steps taken
+<pre><code class="r">## The function get.avg.step returns the average number of steps taken
 ## for a particular interval n.
 get.avg.step &lt;- function(n){
         avg.nsteps.per.interval$average.nsteps[avg.nsteps.per.interval$interval == n]  
