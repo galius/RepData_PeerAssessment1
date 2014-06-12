@@ -4,7 +4,7 @@
 ## Loading and preprocessing the data
 
 Unzip and load the data
-```{r Processing, echo=TRUE, tidy=TRUE}
+```{r Processing, echo=TRUE}
 unzip("activity.zip")
 data <- read.csv(file = "activity.csv",
                  na.strings = "NA",
@@ -14,7 +14,7 @@ data <- read.csv(file = "activity.csv",
 
 
 ## What is the mean total number of steps taken per day?
-```{r Histogram, echo=TRUE, tidy=TRUE}
+```{r Histogram, echo=TRUE}
 library(ggplot2)
 library(plyr)
 
@@ -27,8 +27,8 @@ nsteps.per.day <- ddply(complete.data, .(date), summarise,
 ggplot(data = nsteps.per.day) +
         geom_histogram(aes(x = total.steps), binwidth = 2000) +
         labs(x = "Total number of steps taken each day",
-                y = "Count",
-                title = "Histogram of the Total Number of Steps Taken Each Day")
+             y = "Count",
+             title = "Histogram of the Total Number of Steps Taken Each Day")
 
 # Mean of the total number of steps.
 mean(nsteps.per.day$total.steps)
@@ -39,7 +39,7 @@ median(nsteps.per.day$total.steps)
 
 ## What is the average daily activity pattern?
 
-```{r TimeSeries, echo=TRUE, tidy=TRUE}
+```{r TimeSeries, echo=TRUE}
 
 avg.nsteps.per.interval <- ddply(complete.data, .(interval), summarise, 
                                 average.nsteps = mean(steps))
@@ -47,8 +47,8 @@ avg.nsteps.per.interval <- ddply(complete.data, .(interval), summarise,
 ggplot(avg.nsteps.per.interval, aes(x = interval, y = average.nsteps)) +
         geom_line() +
         labs(x = "5-minute interval",
-                y = "Daily average number of steps",
-                title = "Average Daily Activity Pattern")
+             y = "Daily average number of steps",
+             title = "Average Daily Activity Pattern")
 
 ## Maximum number of steps
 max.steps <- max(avg.nsteps.per.interval$average.nsteps)
@@ -66,7 +66,7 @@ avg.nsteps.per.interval$interval[avg.nsteps.per.interval$average.nsteps == max.s
 There are a total of **`r sum(is.na(data))`** missing values (NA), all in the
 _steps_ variable as shown in the summary bellow:
 
-```{r NumberOfMV, echo=TRUE, tidy=TRUE}
+```{r NumberOfMV, echo=TRUE}
 summary(data)
 ```
 
@@ -76,7 +76,7 @@ Missing values were imputed using the average number of steps taken for that
 5-minute interval. This data is contained in the _**avg.nsteps.per.interval**_ 
 dataframe reported above.
 
-```{r MissingValuesImputation, echo=TRUE, tidy=TRUE}
+```{r MissingValuesImputation, echo=TRUE}
 
 ## The function get.avg.step returns the average number of steps taken
 ## for a particular interval n.
@@ -97,14 +97,14 @@ data.mi[mi.indices,]$steps <- sapply(
 
 ### Histogram of the total number of steps taken each day after missing value imputation
 
-```{r HistogramAfterImputation, echo=TRUE, tidy=TRUE}
+```{r HistogramAfterImputation, echo=TRUE}
 tsteps.df <- ddply(data.mi, .(date), summarise, total.steps=sum(steps))
 
 ggplot(data = tsteps.df) +
         geom_histogram(aes(x = total.steps), binwidth = 2000) +
         labs(x = "Total number of steps taken each day",
-        y = "Count",
-        title = "Histogram of the Total Number of Steps Taken Each Day\nAfter Missing Data Imputation")
+             y = "Count",
+             title = "Histogram of the Total Number of Steps Taken Each Day\nAfter Missing Data Imputation")
 
 # Mean of the total number of steps after m.d. imputation
 mean(tsteps.df$total.steps)
@@ -119,7 +119,7 @@ not fundamentally change neither the mean nor the median values.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r addWeekdaysWeekends, echo=TRUE, tidy=TRUE}
+```{r addWeekdaysWeekends, echo=TRUE}
 data.mi$tday <- weekdays(data.mi$date)
 
 ## dat.type function returns "weekend" or "weekday" depending on the day of the
@@ -132,13 +132,13 @@ data.mi$tday <- as.factor(sapply(data.mi$tday, day.type))
 
 ```
 
-```{r panelTimeSeries, echo=TRUE, tidy=TRUE}
+```{r panelTimeSeries, echo=TRUE}
 library(lattice)
 
 avg.nsteps.by.tday <- ddply(data.mi, .(interval, tday), summarise, 
                 average.nsteps = mean(steps))
 
-xyplot(average.nsteps~interval|tday, data=avg.nsteps.by.tday,
+xyplot(average.nsteps ~ interval | tday, data = avg.nsteps.by.tday,
        type="l",
        xlab="Interval",
        ylab="Number of steps")

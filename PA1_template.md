@@ -7,8 +7,9 @@ Unzip and load the data
 
 ```r
 unzip("activity.zip")
-data <- read.csv(file = "activity.csv", na.strings = "NA", colClasses = c("numeric", 
-    "Date", "numeric"))
+data <- read.csv(file = "activity.csv",
+                 na.strings = "NA",
+                 colClasses = c("numeric", "Date", "numeric"))
 ```
 
 
@@ -19,12 +20,16 @@ library(ggplot2)
 library(plyr)
 
 # Ignoring missing values, working only with complete cases.
-complete.data <- data[complete.cases(data), ]
+complete.data <- data[complete.cases(data),]
 
-nsteps.per.day <- ddply(complete.data, .(date), summarise, total.steps = sum(steps))
+nsteps.per.day <- ddply(complete.data, .(date), summarise, 
+                        total.steps = sum(steps))
 
-ggplot(data = nsteps.per.day) + geom_histogram(aes(x = total.steps), binwidth = 2000) + 
-    labs(x = "Total number of steps taken each day", y = "Count", title = "Histogram of the Total Number of Steps Taken Each Day")
+ggplot(data = nsteps.per.day) +
+        geom_histogram(aes(x = total.steps), binwidth = 2000) +
+        labs(x = "Total number of steps taken each day",
+             y = "Count",
+             title = "Histogram of the Total Number of Steps Taken Each Day")
 ```
 
 ![plot of chunk Histogram](figure/Histogram.png) 
@@ -51,10 +56,14 @@ median(nsteps.per.day$total.steps)
 
 
 ```r
-avg.nsteps.per.interval <- ddply(complete.data, .(interval), summarise, average.nsteps = mean(steps))
+avg.nsteps.per.interval <- ddply(complete.data, .(interval), summarise, 
+                                average.nsteps = mean(steps))
 
-ggplot(avg.nsteps.per.interval, aes(x = interval, y = average.nsteps)) + geom_line() + 
-    labs(x = "5-minute interval", y = "Daily average number of steps", title = "Average Daily Activity Pattern")
+ggplot(avg.nsteps.per.interval, aes(x = interval, y = average.nsteps)) +
+        geom_line() +
+        labs(x = "5-minute interval",
+             y = "Daily average number of steps",
+             title = "Average Daily Activity Pattern")
 ```
 
 ![plot of chunk TimeSeries](figure/TimeSeries.png) 
@@ -110,30 +119,33 @@ dataframe reported above.
 
 
 ```r
-## The function get.avg.step returns the average number of steps taken for a
-## particular interval n.
-get.avg.step <- function(n) {
-    avg.nsteps.per.interval$average.nsteps[avg.nsteps.per.interval$interval == 
-        n]
+## The function get.avg.step returns the average number of steps taken
+## for a particular interval n.
+get.avg.step <- function(n){
+        avg.nsteps.per.interval$average.nsteps[avg.nsteps.per.interval$interval == n]  
 }
 
-## data.mi is a new dataset that is equal to the original dataset but with
-## the missing data filled in.
+## data.mi is a new dataset that is equal to the original dataset 
+## but with the missing data filled in.
 
 data.mi <- data
-mi.indices <- which(is.na(data.mi))  # missing data indices
+mi.indices <- which(is.na(data.mi)) # missing data indices
 
-data.mi[mi.indices, ]$steps <- sapply(data.mi[mi.indices, ]$interval, get.avg.step)
+data.mi[mi.indices,]$steps <- sapply(
+        data.mi[mi.indices,]$interval, get.avg.step)
 ```
 
 ### Histogram of the total number of steps taken each day after missing value imputation
 
 
 ```r
-tsteps.df <- ddply(data.mi, .(date), summarise, total.steps = sum(steps))
+tsteps.df <- ddply(data.mi, .(date), summarise, total.steps=sum(steps))
 
-ggplot(data = tsteps.df) + geom_histogram(aes(x = total.steps), binwidth = 2000) + 
-    labs(x = "Total number of steps taken each day", y = "Count", title = "Histogram of the Total Number of Steps Taken Each Day\nAfter Missing Data Imputation")
+ggplot(data = tsteps.df) +
+        geom_histogram(aes(x = total.steps), binwidth = 2000) +
+        labs(x = "Total number of steps taken each day",
+             y = "Count",
+             title = "Histogram of the Total Number of Steps Taken Each Day\nAfter Missing Data Imputation")
 ```
 
 ![plot of chunk HistogramAfterImputation](figure/HistogramAfterImputation.png) 
@@ -166,11 +178,11 @@ not fundamentally change neither the mean nor the median values.
 ```r
 data.mi$tday <- weekdays(data.mi$date)
 
-## dat.type function returns 'weekend' or 'weekday' depending on the day of
-## the week
-day.type <- function(day) {
-    ifelse(day == "Sunday" || day == "Saturday", "weekend", "weekday")
-}
+## dat.type function returns "weekend" or "weekday" depending on the day of the
+## week
+day.type <- function(day){
+        ifelse(day == "Sunday" || day == "Saturday", "weekend", "weekday")
+} 
 
 data.mi$tday <- as.factor(sapply(data.mi$tday, day.type))
 ```
@@ -179,10 +191,13 @@ data.mi$tday <- as.factor(sapply(data.mi$tday, day.type))
 ```r
 library(lattice)
 
-avg.nsteps.by.tday <- ddply(data.mi, .(interval, tday), summarise, average.nsteps = mean(steps))
+avg.nsteps.by.tday <- ddply(data.mi, .(interval, tday), summarise, 
+                average.nsteps = mean(steps))
 
-xyplot(average.nsteps ~ interval | tday, data = avg.nsteps.by.tday, type = "l", 
-    xlab = "Interval", ylab = "Number of steps")
+xyplot(average.nsteps ~ interval | tday, data = avg.nsteps.by.tday,
+       type="l",
+       xlab="Interval",
+       ylab="Number of steps")
 ```
 
 ![plot of chunk panelTimeSeries](figure/panelTimeSeries.png) 
